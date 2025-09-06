@@ -23,4 +23,4 @@ jobs:
             tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p'|  head -n 1 )
             echo $tag
             echo ${{github.event.workflow_run.head_commit.message}}
-            gh release create $tag --title ${{github.event.workflow_run.head_commit.message}}
+            gh release create $tag --title "${{github.event.workflow_run.head_commit.message}}"

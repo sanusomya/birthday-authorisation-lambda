@@ -17,6 +17,8 @@ jobs:
     - name: build project
       run: go build main.go
     - name: check for latest release in changelog
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         changelog_tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p')
         latest_tag=$(git describe --tags --abbrev=0)

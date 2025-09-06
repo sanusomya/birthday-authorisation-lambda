@@ -10,17 +10,25 @@ on:
 jobs:
     release-tag:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
         steps:
         - name: checkout code
           uses: actions/checkout@v5
           with:
             fetch-depth: 0
-        - name: Create tag
+        - name: Get latest tag
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
           run: |
-            tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p'|  head -n 1 )
+            echo "tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p'|  head -n 1 )" >> $GITHUB_ENV
+        - name: release tag
+          run: |    
             echo $tag
+            # configuring git
+            git config --global user.name "${GITHUB_ACTOR}"
+            git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
             echo ${{github.event.workflow_run.head_commit.message}}
-            gh release create $tag --title "${{github.event.workflow_run.head_commit.message}}"
+            git tag -a $tag -m "${{github.event.workflow_run.head_commit.message}}"
+            git push origin --tag

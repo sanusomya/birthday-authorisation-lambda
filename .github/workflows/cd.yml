@@ -1,9 +1,12 @@
 name: CD
 
 on:
-  push:
-    branches: 
-    - main
+  workflow_run:
+    workflows: ["CI"] # Name of your CI workflow
+    types:
+      - completed # Trigger only when the CI workflow completes
+    branches:
+      - main # Or the branch your CI runs on
 jobs:
     release-tag:
         runs-on: ubuntu-latest

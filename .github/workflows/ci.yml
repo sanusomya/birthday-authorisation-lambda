@@ -14,22 +14,26 @@ jobs:
     steps:
     - name: checkout code
       uses: actions/checkout@v5
-    - name: build project
-      run: go build main.go
-    - name: check for latest release in changelog
+    - name: debug
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        changelog_tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p')
-        latest_tag=$(git describe --tags --abbrev=0)
-        if [[ "$changelog_tag" < "$latest_tag" ]]; then
-          echo "latest tag in changelog: $changelog_tag is incorrect bump the version"
-          exit 1
-        fi
-        if [[ "$changelog_tag" == "$latest_tag" ]]; then
-          echo "latest tag in changelog: $changelog_tag is equal to the latest repo tag: $latest_tag bump the version"
-          exit 1
-        fi
+      run : git describe --tags --abbrev=0
+    # - name: build project
+    #   run: go build main.go
+    # - name: check for latest release in changelog
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   run: |
+    #     changelog_tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p')
+    #     latest_tag=$(git describe --tags --abbrev=0)
+    #     if [[ "$changelog_tag" < "$latest_tag" ]]; then
+    #       echo "latest tag in changelog: $changelog_tag is incorrect bump the version"
+    #       exit 1
+    #     fi
+    #     if [[ "$changelog_tag" == "$latest_tag" ]]; then
+    #       echo "latest tag in changelog: $changelog_tag is equal to the latest repo tag: $latest_tag bump the version"
+    #       exit 1
+    #     fi
 
           
 

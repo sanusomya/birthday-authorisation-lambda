@@ -18,9 +18,9 @@ jobs:
             fetch-depth: 0
         - name: Create tag
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
           run: |
             tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p'|  head -n 1 )
             echo $tag
             echo ${{github.event.workflow_run.head_commit.message}}
-            # git tag -a $tag -m "${{github.event.workflow_run.head_commit.message}}"
+            gh release create $tag --title ${{github.event.workflow_run.head_commit.message}}

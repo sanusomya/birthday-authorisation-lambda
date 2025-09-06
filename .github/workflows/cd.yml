@@ -32,3 +32,11 @@ jobs:
             echo ${{github.event.workflow_run.head_commit.message}}
             git tag -a $tag -m "${{github.event.workflow_run.head_commit.message}}"
             git push origin --tag
+        - name: create a release
+          run: |
+           env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bootstrap main.go
+           zip bootstrap.zip bootstrap
+           notes=$(awk -v ver=$tag '/^## \[v[0-9]+\.[0-9]+\.[0-9]+\]/ {flag=($0 ~ "## \\[" ver "\\]"); next} flag' changelog.md)
+           gh release create $tag bootstrap.zip --title "${{github.event.workflow_run.head_commit.message}}" --notes "${notes}"
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

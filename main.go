@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -15,7 +14,6 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 
 	token := event.Headers["authorization"]
 	secretValue := os.Getenv("validToken")
-	fmt.Println(secretValue)
 
 	if token == secretValue {
 		return events.APIGatewayV2CustomAuthorizerSimpleResponse{IsAuthorized: true}, nil

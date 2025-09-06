@@ -22,5 +22,5 @@ jobs:
           run: |
             tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p'|  head -n 1 )
             echo $tag
-            echo ${{github.event.head_commit.message}}
-            git tag -a $tag -m "${{github.event.head_commit.message}}"
+            echo ${{github.event.workflow_run.head_commit.message}}
+            # git tag -a $tag -m "${{github.event.workflow_run.head_commit.message}}"

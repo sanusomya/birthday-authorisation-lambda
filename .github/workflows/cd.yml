@@ -10,10 +10,14 @@ on:
 jobs:
     release-tag:
         runs-on: ubuntu-latest
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         steps:
-        - name: Create Release
-          uses: rymndhng/release-on-push-action@master
+        - name: checkout code
+          uses: actions/checkout@v5
           with:
-            bump_version_scheme: minor
+            fetch-depth: 0
+        - name: Create tag
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          run: |
+            tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p'|  head -n 1 )
+            git tag -a $tag -m ${{github.event.head_commit.message}}

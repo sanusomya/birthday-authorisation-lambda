@@ -22,7 +22,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        changelog_tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p')
+        changelog_tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p') |  head -n 1
         latest_tag=$(git describe --tags --abbrev=0)
         if [[ "$changelog_tag" < "$latest_tag" ]]; then
           echo "latest tag in changelog: $changelog_tag is incorrect bump the version"

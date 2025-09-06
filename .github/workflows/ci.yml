@@ -14,10 +14,15 @@ jobs:
     steps:
     - name: checkout code
       uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
     - name: debug
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run : git describe --tags --abbrev=0
+      run : |
+       changelog_tag=$(cat changelog.md | sed -n 's/.*\[\(v[0-9.]*\)\].*/\1/p')
+       echo $changelog_tag
+       git describe --tags --abbrev=0
     # - name: build project
     #   run: go build main.go
     # - name: check for latest release in changelog
